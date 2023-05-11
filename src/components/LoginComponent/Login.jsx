@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoginForm from "./LoginForm";
 import GoogleButton from "./GoogleButton";
-import Footer from "../Footer";
+import Footer from "./Footer";
 import Logo from "./Logo";
 import { useNavigate } from "react-router-dom";
 
