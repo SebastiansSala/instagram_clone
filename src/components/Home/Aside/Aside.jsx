@@ -43,12 +43,14 @@ export default function HomeAside() {
         alt="logo"
       />
       <nav className="flex flex-col p-5 gap-3 flex-1">
-        <NavItem
-          icon={AiFillHome}
-          text="Home"
-          selectState={selectState}
-          handleSelect={handleSelect}
-        />
+        <Link to="/">
+          <NavItem
+            icon={AiFillHome}
+            text="Home"
+            selectState={selectState}
+            handleSelect={handleSelect}
+          />
+        </Link>
         <NavItem
           icon={AiOutlineSearch}
           text="Search"
@@ -85,14 +87,14 @@ export default function HomeAside() {
           selectState={selectState}
           handleSelect={handleSelect}
         />
-        <NavItem
-          icon={CgProfile}
-          text="Profile"
-          selectState={selectState}
-          handleSelect={handleSelect}
-        >
-          <Link to="/profile" />
-        </NavItem>
+        <Link to="/profile">
+          <NavItem
+            icon={CgProfile}
+            text="Profile"
+            selectState={selectState}
+            handleSelect={handleSelect}
+          ></NavItem>
+        </Link>
         <NavItem
           icon={CgDetailsMore}
           text="More"
