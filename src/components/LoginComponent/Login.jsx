@@ -4,13 +4,14 @@ import GoogleButton from "./GoogleButton";
 import Footer from "./Footer";
 import Logo from "./Logo";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../../firebase";
 
-export default function Login({user, setCurrentUser}) {
+export default function Login({ currentUser, setCurrentUser }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(user !== null) navigate("/home");
-  }, [user]);
+    if (auth.currentUser) navigate("/");
+  }, [currentUser]);
 
   return (
     <div className="flex flex-col h-screen justify-center items-center pb-10 pt-20 transition-all duration-300">

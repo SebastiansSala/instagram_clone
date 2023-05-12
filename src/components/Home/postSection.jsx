@@ -3,8 +3,17 @@ import { FiMoreHorizontal } from "react-icons/fi";
 import Stories from "./Stories";
 import { AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
+import { auth } from "../../firebase";
+import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
 
-export default function PostSection({ signOutUser }) {
+export default function PostSection() {
+  const navigate = useNavigate();
+  const signOutUser = () => {
+    signOut(auth);
+    navigate("/login");
+  };
+
   return (
     <section>
       <Stories />
@@ -36,7 +45,7 @@ export default function PostSection({ signOutUser }) {
       </div>
       <button
         className="text-xl mt-20 py-2 px-8 bg-red-600"
-        onClick={signOutUser}
+        onClick={() => signOutUser()}
       >
         Sign out
       </button>

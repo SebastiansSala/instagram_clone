@@ -19,7 +19,7 @@ export default function LoginForm({ setCurrentUser }) {
         const errorCode = error.code;
         const errorMessage = error.message;
         setError(errorMessage);
-        navigate("/");
+        navigate("/login");
       });
   };
 

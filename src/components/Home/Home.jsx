@@ -1,38 +1,22 @@
-import { signOut } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { auth } from "../../firebase";
-import { useNavigate } from "react-router-dom";
 import HomeAside from "./Aside/Aside";
-import PostSection from "./postSection";
-import FollowSection from "./FollowSection";
+import { useNavigate } from "react-router-dom";
+import Main from "./Main";
 
-export default function Home({ setCurrentUser }) {
+export default function Home({ user }) {
   const navigate = useNavigate();
-  const signOutUser = () => {
-    signOut(auth);
-    console.log(auth);
-    navigate("/");
-  };
-
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      setCurrentUser(user);
-    } else {
-      setCurrentUser(null);
-    }
-  });
 
   useEffect(() => {
-    if (!auth.currentUser) navigate("/");
+    if (!auth.currentUser) navigate("/login");
   }, []);
 
   return (
     <div className="flex flex-col xl:flex-row">
       <HomeAside />
-      <section className="ml-80 flex-1 h-full">
+      <section className="ml-80 flex-1 h-full ">
         <main className="container mx-auto h-screen flex p-12 justify-center">
-          <PostSection signOutUser={signOutUser} />
-          <FollowSection />
+          <Main></Main>
         </main>
       </section>
     </div>

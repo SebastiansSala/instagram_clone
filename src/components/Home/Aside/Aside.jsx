@@ -9,9 +9,9 @@ import NavItem from "./NavItem";
 import { BsCameraReels } from "react-icons/bs";
 import { FiMessageSquare } from "react-icons/fi";
 import { CgProfile, CgDetailsMore, CgAddR } from "react-icons/cg";
+import { Link } from "react-router-dom";
 
 export default function HomeAside() {
-
   const [selectState, setSelectState] = useState({
     Home: false,
     Search: false,
@@ -36,7 +36,7 @@ export default function HomeAside() {
   };
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-80 border-r flex flex-col">
+    <aside className="fixed left-0 top-0 h-full w-96 border-r flex flex-col">
       <img
         src="https://1000marcas.net/wp-content/uploads/2019/11/Logo-Instagram.png"
         className="ml-6 w-40"
@@ -46,56 +46,58 @@ export default function HomeAside() {
         <NavItem
           icon={AiFillHome}
           text="Home"
-          selectState = {selectState}
+          selectState={selectState}
           handleSelect={handleSelect}
         />
         <NavItem
           icon={AiOutlineSearch}
           text="Search"
-          selectState = {selectState}
+          selectState={selectState}
           handleSelect={handleSelect}
         />
         <NavItem
           icon={AiOutlineCompass}
           text="Explore"
-          selectState = {selectState}
+          selectState={selectState}
           handleSelect={handleSelect}
         />
         <NavItem
           icon={BsCameraReels}
           text="Reels"
-          selectState = {selectState}
+          selectState={selectState}
           handleSelect={handleSelect}
         />
         <NavItem
           icon={FiMessageSquare}
           text="Messages"
-          selectState = {selectState}
+          selectState={selectState}
           handleSelect={handleSelect}
         />
         <NavItem
           icon={AiOutlineHeart}
           text="Notifications"
-          selectState = {selectState}
+          selectState={selectState}
           handleSelect={handleSelect}
         />
         <NavItem
           icon={CgAddR}
           text="Create"
-          selectState = {selectState}
+          selectState={selectState}
           handleSelect={handleSelect}
         />
         <NavItem
           icon={CgProfile}
           text="Profile"
-          selectState = {selectState}
+          selectState={selectState}
           handleSelect={handleSelect}
-        />
+        >
+          <Link to="/profile" />
+        </NavItem>
         <NavItem
           icon={CgDetailsMore}
           text="More"
-          styles={{marginTop: "auto"}}
-          selectState = {selectState}
+          styles={{ marginTop: "auto" }}
+          selectState={selectState}
           handleSelect={handleSelect}
         />
       </nav>
