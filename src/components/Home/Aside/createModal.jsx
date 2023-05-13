@@ -11,14 +11,11 @@ export default function CreateModal({ setSelectState, selectState }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(image);
-    console.log(image.name);
     try {
       const imageRef = ref(storage, image.name);
       await uploadBytes(imageRef, image);
 
       const imgUrl = await getDownloadURL(imageRef);
-      console.log(imgUrl);
 
       const user = auth.currentUser;
       if (user) {
@@ -26,6 +23,7 @@ export default function CreateModal({ setSelectState, selectState }) {
           userID: user.uid,
           username: user.displayName,
           img: imgUrl,
+          likes: 0,
           txt: text,
         });
         console.log("Document written with ID: ", docRef.id);

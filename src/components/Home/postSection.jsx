@@ -7,44 +7,39 @@ import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { addDoc, collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
+import RenderComments from "./RenderComments";
 
 export default function PostSection() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([{}]);
   const [comments, setComments] = useState([]);
   const [showComments, setShowComments] = useState(false);
-  const [changeComment, setChangeComment] = useState("");
+  const [postComments, setPostComments] = useState(posts.map(post => ({ [post.id]: '' })));
 
-  const signOutUser = () => {
-    signOut(auth);
-    navigate("/login");
-  };
-
-  const handleSubmit = async (postID) => {
+  const handleSubmit = async (postId) => {
     const currentUsername = auth.currentUser.displayName;
-    if(changeComment.length < 8) return;
+    console.log(postId)
     try {
-      const postRef = doc(db, "posts", postID);
+      const postRef = doc(db, "posts", postId);
       const commentRef = collection(postRef, "comments");
       const newCommentRef = await addDoc(commentRef, {
         username: currentUsername,
-        comment: changeComment,
+        comment: postComments[postId],
         likes: 0,
       });
-      setChangeComment("");
+      setPostComments(prevPost => ({...prevPost, [postId]: ""}));
     } catch (e) {
       console.error(e);
     }
   };
 
-  const handleCommentChange = (postId) => {
-    const postIndex = posts.findIndex((post) => posts.id = postId);
-    const post = posts[postIndex];
-    const updatedPost = { ...post, comment: value };
-    const updatedPosts = [...posts];
-    updatedPosts.splice(postIndex, 1, updatedPost);
-    setPosts(updatedPosts);
-  }
+  const handleCommentChange = (postId, e) => {
+    setPostComments(prevState => ({
+      ...prevState,
+      [postId]: e.target.value
+    }));
+  };
+  
 
   const handleShowComments = (postId) => {
     setShowComments(true);
@@ -81,11 +76,11 @@ export default function PostSection() {
 
   return (
     <section>
-      {posts.map((post) => {
+      {posts.map((post, index) => {
         return (
           <div
             className="flex flex-col ml-20 mt-10 w-4/6 border-b pb-5"
-            key={post.id}
+            key={index}
           >
             <div>
               <div className="flex items-center gap-3 mb-5">
@@ -116,31 +111,13 @@ export default function PostSection() {
               >
                 View all 2 Comments
               </button>
-              {showComments && (
-                <div className="w-screen h-screen inset-0 bg-black/60 flex items-center justify-center z-50 absolute transition duration-300">
-                  <div
-                    className="w-full h-full"
-                    onClick={setShowComments(false)}
-                  ></div>
-                  <span
-                    className="right-4 top-1 text-white absolute text-3xl cursor-pointer"
-                    onClick={setShowComments(false)}
-                  >
-                    x
-                  </span>
-                  <div className="container  w-[40rem] h-[40rem] bg-white rounded-lg flex flex-col absolute">
-
-                  </div>
-                </div>
-              )}
               <div className="flex flex-wrap items-center">
                 <textarea
                   placeholder="Add a comment..."
-                  value={changeComment}
-                  onChange={(e) => handleCommentChange(e.target.value)}
+                  value={postComments[post.id]}
+                  onChange={(e) => handleCommentChange(post.id, e)}
                   className="outline-none w-11/12 overflow-auto h-6 break-words max-h-24 resize-none"
                 />
-
                 <button
                   className="text-blue-400 text-sm"
                   onClick={() => handleSubmit(post.id)}
@@ -158,6 +135,9 @@ export default function PostSection() {
       >
         Sign out
       </button>
+      {showComments && (
+        <RenderComments comments={comments} setShowComments={setShowComments} />
+      )}
     </section>
   );
 }

@@ -53,10 +53,11 @@ export default function ProfilePage({ currentUser }) {
           <span>Kromli</span>
         </div>
       </section>
-      <section className="flex flex-col items-center w-96">
+      <section className="flex flex-col items-center">
         <div className="flex gap-4">
           <ProfileTags
             text="posts"
+            currentUser={currentUser}
             selectState={selectState}
             handleSelected={handleSelected}
           />

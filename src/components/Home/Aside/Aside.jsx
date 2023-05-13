@@ -33,11 +33,11 @@ export default function HomeAside() {
         ...prevState,
         More: !prevState.More,
       }));
-      if (selectState.More) {
+      if (selectState.More || !selectState.More) {
         setIsModalOpen(true);
-        return;
       } else {
         setIsModalOpen(false);
+        
       }
     }
     setSelectState((prevState) => {
@@ -101,7 +101,12 @@ export default function HomeAside() {
           selectState={selectState}
           handleSelect={handleSelect}
         />
-        {selectState.Create && <CreateModal setSelectState={setSelectState} selectState={selectState}/>}
+        {selectState.Create && (
+          <CreateModal
+            setSelectState={setSelectState}
+            selectState={selectState}
+          />
+        )}
         <Link to="/profile">
           <NavItem
             icon={CgProfile}
@@ -110,13 +115,19 @@ export default function HomeAside() {
             handleSelect={handleSelect}
           ></NavItem>
         </Link>
-        {isModalOpen && <MoreModal />}
+        {isModalOpen && (
+          <MoreModal
+            setIsModalOpen={setIsModalOpen}
+          />
+        )}
         <NavItem
           icon={CgDetailsMore}
           text="More"
-          styles={{ marginTop: "auto" }}
           selectState={selectState}
           handleSelect={handleSelect}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+
         />
       </nav>
     </aside>

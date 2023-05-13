@@ -21,7 +21,7 @@ function App() {
               />
             }
           />
-          <Route path="/*" element={<Home currentUser={currentUser} />} />
+          <Route path="/*" element={<Home currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
