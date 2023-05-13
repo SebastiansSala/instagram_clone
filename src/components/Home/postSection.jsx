@@ -1,6 +1,5 @@
 import React from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
-import Stories from "./Stories";
 import { AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { auth } from "../../firebase";
@@ -16,7 +15,6 @@ export default function PostSection() {
 
   return (
     <section>
-      <Stories />
       <div className="flex flex-col ml-20 mt-10 w-4/6 border-b">
         <div>
           <div className="flex items-center gap-3 mb-5">
