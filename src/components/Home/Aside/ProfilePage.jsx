@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { auth } from "../../../firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import HomeFooter from "../Footer";
-import { Link } from "react-router-dom";
 import ProfileTags from "./profileTags";
 import Saved from "./Saved";
 import Posts from "./Posts";
@@ -12,25 +10,24 @@ import { Routes, Route } from "react-router-dom";
 
 export default function ProfilePage({ currentUser }) {
   const navigate = useNavigate();
+  const [username, setUsername] = useState(currentUser?.displayName);
   const [selectState, setSelectState] = useState({
     posts: true,
     saved: false,
     tagged: false,
   });
 
-  const handleSelect = (selected) => {
-    setSelectState((prevSelectState) => {
+  const handleSelected = (name) => {
+    setSelectState((prevState) => {
       const newState = {};
-      for (const prop in prevSelectState) {
-        if (prevSelectState.hasOwnProperty(prop)) {
-          newState[prop] = prop === selected ? !prevSelectState[prop] : false;
-        }
-      }
+      Object.keys(prevState).forEach(key => {
+        newState[key] = key === name;
+      });
       return newState;
     });
   };
+  
 
-  const username = currentUser?.displayName;
   const handleSignOut = () => {
     signOut(auth)
       .then(() => navigate("/login"))
@@ -60,18 +57,18 @@ export default function ProfilePage({ currentUser }) {
         <div className="flex gap-4">
           <ProfileTags
             text="posts"
-            handleSelect={handleSelect}
             selectState={selectState}
+            handleSelected={handleSelected}
           />
           <ProfileTags
             text="saved"
-            handleSelect={handleSelect}
             selectState={selectState}
+            handleSelected={handleSelected}
           />
           <ProfileTags
             text="tagged"
-            handleSelect={handleSelect}
             selectState={selectState}
+            handleSelected={handleSelected}
           />
         </div>
         <div className="flex flex-col gap-5 items-center mt-20">

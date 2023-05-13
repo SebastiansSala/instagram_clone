@@ -10,6 +10,8 @@ import { BsCameraReels } from "react-icons/bs";
 import { FiMessageSquare } from "react-icons/fi";
 import { CgProfile, CgDetailsMore, CgAddR } from "react-icons/cg";
 import { Link } from "react-router-dom";
+import MoreModal from "./MoreModal";
+import CreateModal from "./createModal";
 
 export default function HomeAside() {
   const [selectState, setSelectState] = useState({
@@ -19,18 +21,30 @@ export default function HomeAside() {
     Reels: false,
     Messages: false,
     Notifications: false,
+    Create: false,
     Profile: false,
     More: false,
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSelect = (selected) => {
-    setSelectState((prevSelectState) => {
-      const newState = {};
-      for (const prop in prevSelectState) {
-        if (prevSelectState.hasOwnProperty(prop)) {
-          newState[prop] = prop === selected ? !prevSelectState[prop] : false;
-        }
+    if (selected === "More") {
+      setSelectState((prevState) => ({
+        ...prevState,
+        More: !prevState.More,
+      }));
+      if (selectState.More) {
+        setIsModalOpen(true);
+        return;
+      } else {
+        setIsModalOpen(false);
       }
+    }
+    setSelectState((prevState) => {
+      const newState = {};
+      Object.keys(prevState).forEach((key) => {
+        newState[key] = key === selected;
+      });
       return newState;
     });
   };
@@ -87,6 +101,7 @@ export default function HomeAside() {
           selectState={selectState}
           handleSelect={handleSelect}
         />
+        {selectState.Create && <CreateModal setSelectState={setSelectState} selectState={selectState}/>}
         <Link to="/profile">
           <NavItem
             icon={CgProfile}
@@ -95,6 +110,7 @@ export default function HomeAside() {
             handleSelect={handleSelect}
           ></NavItem>
         </Link>
+        {isModalOpen && <MoreModal />}
         <NavItem
           icon={CgDetailsMore}
           text="More"
