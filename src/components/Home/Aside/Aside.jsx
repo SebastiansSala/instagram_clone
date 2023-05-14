@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import MoreModal from "./MoreModal";
 import CreateModal from "./createModal";
 
-export default function HomeAside() {
+export default function HomeAside({setDarkmode, darkmode, handleClick}) {
   const [selectState, setSelectState] = useState({
     Home: false,
     Search: false,
@@ -48,7 +48,7 @@ export default function HomeAside() {
   };
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-96 border-r flex flex-col">
+    <aside className="fixed left-0 top-0 h-full w-96  border-r flex flex-col">
       <img
         src="https://1000marcas.net/wp-content/uploads/2019/11/Logo-Instagram.png"
         className="ml-6 w-40"
@@ -103,6 +103,7 @@ export default function HomeAside() {
         {isModalOpen && (
           <MoreModal
             setIsModalOpen={setIsModalOpen}
+            onClick = {handleClick}
           />
         )}
         <NavItem
@@ -112,7 +113,6 @@ export default function HomeAside() {
           handleSelect={handleSelect}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
-
         />
       </nav>
     </aside>

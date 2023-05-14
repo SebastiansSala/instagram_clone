@@ -19,7 +19,6 @@ export default function PostSection({ loadingPosts, setLoadingPosts }) {
 
   const handleSubmit = async (postId) => {
     const currentUsername = auth.currentUser.displayName;
-    console.log(postId);
     try {
       const postRef = doc(db, "posts", postId);
       const commentRef = collection(postRef, "comments");

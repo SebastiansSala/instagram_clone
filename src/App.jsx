@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./components/LoginComponent/Login";
 import Home from "./components/Home/Home";
-import { ChakraProvider } from "@chakra-ui/react";
+import Signup from "./components/LoginComponent/Signup";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
 
   return (
-    <ChakraProvider>
       <BrowserRouter>
         <Routes>
           <Route
@@ -22,9 +21,9 @@ function App() {
             }
           />
           <Route path="/*" element={<Home currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
+          <Route path="/signup" element={<Signup setCurrentUser={setCurrentUser} />} />
         </Routes>
       </BrowserRouter>
-    </ChakraProvider>
   );
 }
 

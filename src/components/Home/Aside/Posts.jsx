@@ -3,7 +3,7 @@ import { AiOutlineCamera } from "react-icons/ai";
 import { auth, db } from "../../../firebase";
 import { collection, getDocs, where, query } from "firebase/firestore";
 
-export default function Posts() {
+export default function Posts({currentUser, setCurrentUser}) {
   const [showPost, setShowPost] = useState(true);
   const [post, setPost] = useState([]);
 
@@ -41,7 +41,7 @@ export default function Posts() {
           </p>
         </>
       ) : (
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap justify-center">
           {post.map((elem, index) => {
             return (
               <div key={index}>

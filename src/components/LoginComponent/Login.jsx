@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import LoginForm from "./LoginForm";
 import GoogleButton from "./GoogleButton";
 import Footer from "./Footer";
 import Logo from "./Logo";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
+import { Link } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { getDocs, collection } from "firebase/firestore";
+import { db } from "../../firebase";
 
 export default function Login({ currentUser, setCurrentUser }) {
   const navigate = useNavigate();
@@ -12,6 +16,29 @@ export default function Login({ currentUser, setCurrentUser }) {
   useEffect(() => {
     if (auth.currentUser) navigate("/");
   }, [currentUser]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userData = await getUser(user);
+        setCurrentUser(userData);
+      } else {
+        setCurrentUser(null);
+      }
+    });
+    return () => unsubscribe();
+  }, [setCurrentUser, auth.currentUser]);
+
+  const getUser = async (user) => {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    let userData = null;
+    querySnapshot.forEach((doc) => {
+      if (doc.data().userID === user.uid) {
+        userData = doc.data();
+      }
+    });
+    return userData;
+  };
 
   return (
     <div className="flex flex-col h-screen justify-center items-center pb-10 pt-20 transition-all duration-300">
@@ -30,7 +57,9 @@ export default function Login({ currentUser, setCurrentUser }) {
           <LoginForm setCurrentUser={setCurrentUser} />
           <p className="text-sm text-black md:text-xl lg:text-base">
             Don't have an account?{" "}
-            <span className="text-blue-400 font-bold">Sign up</span>
+            <span className="text-blue-400 font-bold">
+              <Link to="/signup">Sign</Link> up
+            </span>
           </p>
           <section className="mt-8 flex flex-col items-center">
             <span className="text-sm md:text-xl lg:text-sm">Get the app</span>
