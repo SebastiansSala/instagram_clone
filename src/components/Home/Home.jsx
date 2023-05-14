@@ -23,10 +23,10 @@ export default function Home({ setCurrentUser, currentUser }) {
   }
 
   return (
-    <div className={`flex flex-col xl:flex-row dark:bg-black bg-white`}>
+    <div className="flex flex-col xl:flex-row dark:bg-black transition duration-300 bg-white">
       {loading && <Loading/>}
       <HomeAside setDarkmode={setDarkmode} darkmode={darkmode} handleClick = {handleClick}/>
-      <section className="ml-80 flex-1 h-full">
+      <section className="xl:ml-80 flex-1 xl:h-full order-1 mb-20">
         <main className="container mx-auto flex p-8 justify-center">
           <Routes>
             <Route path="/" element={<Main setLoading={setLoading} darkmode={darkmode} currentUser={currentUser} setCurrentUser={setCurrentUser}/>} />

@@ -5,7 +5,6 @@ export default function NavItem({
   text,
   selectState,
   handleSelect,
-  styles,
   moreNavItemRef,
 }) {
   const [hovered, setHovered] = useState(false);
@@ -13,20 +12,19 @@ export default function NavItem({
   return (
     <li
       ref={moreNavItemRef}
-      className={`hover:bg-gray-300/30 hover:cursor-pointer px-2 py-3 rounded-md list-none transition-all w-full duration-300 flex gap-3 ${text === "More" ? 'mt-auto' : ""} ${
+      className={`hover:bg-gray-300/30 dark:text-white hover:cursor-pointer p-1 rounded-md list-none transition-all xl:w-full duration-300 flex gap-3 ${text === "More" ? 'mt-auto' : ""} ${
         selectState[text] ? "font-bold" : ""
-      }`}
+      } ${text === "Explore" || text === "More" ? "hidden xl:block" : ""}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => handleSelect(text)}
-      style={styles}
     >
       {icon({
-        className: `text-2xl transition-all duration-300 ${
+        className: `xl:text-2xl text-5xl transition-all duration-300 ${
           hovered ? "scale-125" : ""
         }`,
       })}
-      <span>{text}</span>
+      <span className="hidden xl:block">{text}</span>
     </li>
   );
 }

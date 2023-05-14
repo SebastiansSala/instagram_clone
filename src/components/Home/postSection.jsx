@@ -82,7 +82,7 @@ export default function PostSection({ loadingPosts, setLoadingPosts }) {
         posts.map((post, index) => {
           return (
             <div
-              className="flex flex-col ml-20 mt-10 w-4/6 border-b pb-5"
+              className="dark:text-white flex flex-col xl:ml-20 mt-10 w-4/6 border-b pb-5"
               key={index}
             >
               <div>
@@ -113,7 +113,7 @@ export default function PostSection({ loadingPosts, setLoadingPosts }) {
                     placeholder="Add a comment..."
                     value={postComments[post.id]}
                     onChange={(e) => handleCommentChange(post.id, e)}
-                    className="outline-none w-11/12 overflow-auto h-6 break-words max-h-24 resize-none"
+                    className="outline-none dark:bg-black w-11/12 overflow-auto h-6 break-words max-h-24 resize-none"
                   />
                   <button
                     className="text-blue-400 text-sm"
