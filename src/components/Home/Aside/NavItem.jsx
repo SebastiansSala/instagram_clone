@@ -14,7 +14,7 @@ export default function NavItem({
       ref={moreNavItemRef}
       className={`hover:bg-gray-300/30 dark:text-white hover:cursor-pointer p-1 rounded-md list-none transition-all xl:w-full duration-300 flex gap-3 ${text === "More" ? 'mt-auto' : ""} ${
         selectState[text] ? "font-bold" : ""
-      } ${text === "Explore" || text === "More" ? "hidden xl:block" : ""}`}
+      } ${text === "Explore" || text === "More" ? "hidden xl:flex" : ""}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => handleSelect(text)}

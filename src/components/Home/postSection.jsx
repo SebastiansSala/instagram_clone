@@ -51,7 +51,7 @@ export default function PostSection({ loadingPosts, setLoadingPosts }) {
           id: doc.id,
           ...doc.data(),
         }));
-        setComments({ ...comments, [postId]: comments });
+        return { ...comments, [postId]: comments };
       } catch (e) {
         console.error(e);
       }
@@ -82,7 +82,7 @@ export default function PostSection({ loadingPosts, setLoadingPosts }) {
         posts.map((post, index) => {
           return (
             <div
-              className="dark:text-white flex flex-col xl:ml-20 mt-10 w-4/6 border-b pb-5"
+              className="dark:text-white flex flex-col xl:ml-20 mt-10 w-full xl:w-4/6 border-b pb-5"
               key={index}
             >
               <div>
@@ -99,7 +99,16 @@ export default function PostSection({ loadingPosts, setLoadingPosts }) {
                 ></img>
                 <div className="flex gap-5 mt-3 items-center">
                   <AiOutlineHeart className="text-2xl hover:cursor-pointer hover:text-gray-500 max-h" />
-                  <FaRegComment className="text-xl hover:cursor-pointer hover:text-gray-500 "  onClick={() => handleShowComments(post.id)}/>
+                  <FaRegComment
+                    className="text-xl hover:cursor-pointer hover:text-gray-500 "
+                    onClick={() => handleShowComments(post.id)}
+                  />
+                  {showComments && (
+                    <RenderComments
+                      comments={comments}
+                      setShowComments={setShowComments}
+                    />
+                  )}
                 </div>
                 <p className="hover:cursor-pointer mt-2 text-sm max">
                   {post.likes} likes
@@ -126,9 +135,6 @@ export default function PostSection({ loadingPosts, setLoadingPosts }) {
             </div>
           );
         })}
-      {showComments && (
-        <RenderComments comments={comments} setShowComments={setShowComments} />
-      )}
     </section>
   );
 }

@@ -48,7 +48,7 @@ export default function HomeAside({setDarkmode, darkmode, handleClick}) {
   };
 
   return (
-    <aside className="fixed bottom-0 xl:top-0 xl:left-0 h-20 w-full xl:w-0 xl:h-full xl:pr-40 border-t border-r flex bg-white dark:bg-black xl:flex-col order-2 xl:order-first">
+    <aside className="fixed bottom-0 xl:top-0 xl:left-0 h-20 w-full xl:w-96 xl:h-full border-t border-r flex bg-white dark:bg-black xl:flex-col order-2 xl:order-first">
       {darkmode ? (
         <img
         src="https://www.pngkey.com/png/full/28-287308_instagram-logo-text-white.png"
