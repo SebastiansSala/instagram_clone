@@ -6,8 +6,6 @@ import {
   AiOutlineHeart,
 } from "react-icons/ai";
 import NavItem from "./NavItem";
-import { BsCameraReels } from "react-icons/bs";
-import { FiMessageSquare } from "react-icons/fi";
 import { CgProfile, CgDetailsMore, CgAddR } from "react-icons/cg";
 import { Link } from "react-router-dom";
 import MoreModal from "./MoreModal";
@@ -78,18 +76,6 @@ export default function HomeAside() {
           handleSelect={handleSelect}
         />
         <NavItem
-          icon={BsCameraReels}
-          text="Reels"
-          selectState={selectState}
-          handleSelect={handleSelect}
-        />
-        <NavItem
-          icon={FiMessageSquare}
-          text="Messages"
-          selectState={selectState}
-          handleSelect={handleSelect}
-        />
-        <NavItem
           icon={AiOutlineHeart}
           text="Notifications"
           selectState={selectState}
@@ -104,7 +90,6 @@ export default function HomeAside() {
         {selectState.Create && (
           <CreateModal
             setSelectState={setSelectState}
-            selectState={selectState}
           />
         )}
         <Link to="/profile">

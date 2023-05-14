@@ -4,8 +4,9 @@ import { collection, addDoc } from "firebase/firestore";
 import { storage } from "../../../firebase";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { db } from "../../../firebase";
+import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 
-export default function CreateModal({ setSelectState, selectState }) {
+export default function CreateModal({ setSelectState }) {
   const [image, setImage] = useState(undefined);
   const [text, setText] = useState("");
 
@@ -62,7 +63,7 @@ export default function CreateModal({ setSelectState, selectState }) {
               Create new Post
             </span>
             <div className="flex flex-col justify-center items-center gap-5 flex-1">
-              <img src="" alt="create post" />
+              <MdOutlineAddPhotoAlternate className="text-7xl"/>
               <span className="text-xl">Drag photos and videos here</span>
               <form className="hover:cursor-pointer">
                 <div className="relative hover:cursor-pointer">

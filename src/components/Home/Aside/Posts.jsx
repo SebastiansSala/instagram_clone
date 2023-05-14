@@ -4,12 +4,11 @@ import { auth, db } from "../../../firebase";
 import { collection, getDocs, where, query } from "firebase/firestore";
 
 export default function Posts() {
-  const [showPost, setShowPost] = useState(false);
+  const [showPost, setShowPost] = useState(true);
   const [post, setPost] = useState([]);
 
   useEffect(() => {
     const userID = auth.currentUser?.uid;
-    console.log(userID);
     const getPosts = async () => {
       const querySnapshot = await getDocs(
         query(collection(db, "posts"), where("userID", "==", userID))
@@ -21,10 +20,13 @@ export default function Posts() {
       setPost(posts);
     };
     getPosts();
-    if (post.length > 0) {
-      setShowPost(true);
-    }
   }, []);
+
+  useEffect(() => {
+    if (post.length > 0) {
+      setShowPost(false);
+    }
+  }, [post])
 
   return (
     <>
