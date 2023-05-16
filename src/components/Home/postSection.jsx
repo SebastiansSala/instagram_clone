@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { AiOutlineHeart } from "react-icons/ai";
-import { FaRegComment } from "react-icons/fa";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
+import { FaRegComment } from "react-icons/fa";
 import { addDoc, collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
-import RenderComments from "./RenderComments";
 
-export default function PostSection({ loadingPosts, setLoadingPosts }) {
-  const navigate = useNavigate();
+export default function PostSection({
+  loadingPosts,
+  setLoadingPosts,
+  setComments,
+  setShowComments,
+  setCurrentPost
+}) {
+
   const [posts, setPosts] = useState([{}]);
-  const [comments, setComments] = useState([]);
-  const [showComments, setShowComments] = useState(false);
   const [postComments, setPostComments] = useState(
     posts.map((post) => ({ [post.id]: "" }))
   );
@@ -41,7 +44,8 @@ export default function PostSection({ loadingPosts, setLoadingPosts }) {
   };
 
   const handleShowComments = (postId) => {
-    setShowComments(true);
+    const post = posts.filter((post) => post.id === postId);
+    setCurrentPost(post[0]);
     const mapComments = async () => {
       try {
         const postRef = doc(db, "posts", postId);
@@ -51,12 +55,12 @@ export default function PostSection({ loadingPosts, setLoadingPosts }) {
           id: doc.id,
           ...doc.data(),
         }));
-        return { ...comments, [postId]: comments };
+        setComments(comments);
       } catch (e) {
         console.error(e);
       }
     };
-    mapComments().then((data) => setComments(data));
+    mapComments().then(() => setShowComments(true));
   };
 
   const mapPosts = async () => {
@@ -77,7 +81,7 @@ export default function PostSection({ loadingPosts, setLoadingPosts }) {
   }, []);
 
   return (
-    <section>
+    <section className="bg-white dark:bg-black">
       {!loadingPosts &&
         posts.map((post, index) => {
           return (
@@ -103,12 +107,6 @@ export default function PostSection({ loadingPosts, setLoadingPosts }) {
                     className="text-xl hover:cursor-pointer hover:text-gray-500 "
                     onClick={() => handleShowComments(post.id)}
                   />
-                  {showComments && (
-                    <RenderComments
-                      comments={comments}
-                      setShowComments={setShowComments}
-                    />
-                  )}
                 </div>
                 <p className="hover:cursor-pointer mt-2 text-sm max">
                   {post.likes} likes

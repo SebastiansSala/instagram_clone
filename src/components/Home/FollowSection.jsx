@@ -3,7 +3,7 @@ import HomeFooter from "./Footer";
 
 export default function FollowSection() {
   return (
-    <section className="hidden xl:block xl:w-80">
+    <section className="hidden xl:block xl:w-80 ">
       <div className="flex gap-5 items-center hover:cursor-pointer">
         <div className="h-6 w-6 xl:w-12 xl:h-12 rounded-full bg-green-400"></div>
         <div className="flex flex-col">
