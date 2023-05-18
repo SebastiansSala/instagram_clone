@@ -2,9 +2,15 @@ import React, { useEffect, useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { AiOutlineHeart } from "react-icons/ai";
 import { auth } from "../../firebase";
-import { useNavigate } from "react-router-dom";
 import { FaRegComment } from "react-icons/fa";
-import { addDoc, collection, doc, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 
 export default function PostSection({
@@ -12,10 +18,9 @@ export default function PostSection({
   setLoadingPosts,
   setComments,
   setShowComments,
-  setCurrentPost
+  setCurrentPost,
 }) {
-
-  const [posts, setPosts] = useState([{}]);
+  const [posts, setPosts] = useState([]);
   const [postComments, setPostComments] = useState(
     posts.map((post) => ({ [post.id]: "" }))
   );
@@ -28,12 +33,45 @@ export default function PostSection({
       const newCommentRef = await addDoc(commentRef, {
         username: currentUsername,
         comment: postComments[postId],
-        likes: 0,
+        likes: [],
       });
-      setPostComments((prevPost) => ({ ...prevPost, [postId]: "" }));
+      const updatedComments = await getDoc(newCommentRef);
+      setPostComments((prevPost) => ({ ...prevPost, [postId]: "", likesCount: updatedComments.data().likes.length}));
     } catch (e) {
       console.error(e);
     }
+  };
+
+  const handleLikes = async (postId) => {
+    const postRef = doc(db, "posts", postId);
+    const docSnapshot = await getDoc(postRef);
+    const likes = docSnapshot.data().likes;
+    const currentUser = auth.currentUser.uid;
+    const userFounded = likes.find((user) => user === currentUser);
+    if (userFounded) {
+      const updatedList = likes.filter((user) => user !== currentUser);
+      await updateDoc(postRef, {
+        likes: updatedList,
+      });
+    } else {
+      await updateDoc(postRef, {
+        likes: [...likes, currentUser],
+      });
+    }
+    const updatedDocSnapshot = await getDoc(postRef);
+    const updatedLikes = updatedDocSnapshot.data().likes;
+    setPosts((prevState) =>
+      prevState.map((post) => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            likesCount: updatedLikes.length,
+            likes: updatedLikes,
+          };
+        }
+        return post;
+      })
+    );
   };
 
   const handleCommentChange = (postId, e) => {
@@ -54,6 +92,7 @@ export default function PostSection({
         const comments = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
+          likesCount: doc.data().likes.length
         }));
         setComments(comments);
       } catch (e) {
@@ -67,7 +106,11 @@ export default function PostSection({
     setLoadingPosts(true);
     try {
       const querySnapshot = await getDocs(collection(db, "posts"));
-      return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      return querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        likesCount: doc.data().likes.length,
+        ...doc.data(),
+      }));
     } catch (e) {
       console.error(e);
       return [];
@@ -102,14 +145,21 @@ export default function PostSection({
                   className="w-[30rem] object-contain object-center"
                 ></img>
                 <div className="flex gap-5 mt-3 items-center">
-                  <AiOutlineHeart className="text-2xl hover:cursor-pointer hover:text-gray-500 max-h" />
+                  <AiOutlineHeart
+                    className={`text-2xl hover:cursor-pointer hover:text-gray-500 max-h ${
+                      post.likes.includes(auth.currentUser.uid)
+                        ? "text-red-600"
+                        : "text-black"
+                    }`}
+                    onClick={() => handleLikes(post.id)}
+                  />
                   <FaRegComment
                     className="text-xl hover:cursor-pointer hover:text-gray-500 "
                     onClick={() => handleShowComments(post.id)}
                   />
                 </div>
                 <p className="hover:cursor-pointer mt-2 text-sm max">
-                  {post.likes} likes
+                  {post.likesCount} likes
                 </p>
                 <div className="flex align-center gap-3 text-sm mt-2">
                   <span className="font-semibold">{post.username}</span>

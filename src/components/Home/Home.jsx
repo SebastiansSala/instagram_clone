@@ -67,6 +67,7 @@ export default function Home({ setCurrentUser, currentUser }) {
               comments={comments}
               setShowComments={setShowComments}
               post={currentPost}
+              setPost={setCurrentPost}
             />
           )}
         </main>
