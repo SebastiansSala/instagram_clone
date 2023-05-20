@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProfileTags from "./profileTags";
 import Saved from "./Saved";
 import Posts from "./Posts";
 import Tagged from "./Tagged";
 import { Routes, Route } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../../../firebase";
 
 export default function ProfilePage({ currentUser, setCurrentUser }) {
+  const navigate = useNavigate();
+  const [displayName, setDisplayName] = useState("");
   const [selectState, setSelectState] = useState({
     posts: true,
     saved: false,
@@ -21,6 +25,20 @@ export default function ProfilePage({ currentUser, setCurrentUser }) {
       return newState;
     });
   };
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user && user.displayName) {
+        setDisplayName(user.displayName);
+      } else {
+        navigate("/login");
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [navigate]);
   
   return (
     <div className="flex flex-col items-center px-20 container mx-auto ">
@@ -28,7 +46,7 @@ export default function ProfilePage({ currentUser, setCurrentUser }) {
         <div className="w-40 h-40 bg-red-300 rounded-full"></div>
         <div className="flex flex-col gap-5">
           <div className="flex gap-4 items-center">
-            <span>{currentUser.username}</span>
+            <span>{displayName}</span>
             <button className="rounded-md px-4 py-2 bg-gray-400/10 text-sm font-semibold hover:bg-gray-400/40">
               Edit profile
             </button>

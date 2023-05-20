@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import MoreModal from "./MoreModal";
 import CreateModal from "./createModal";
 
-export default function HomeAside({darkmode, handleClick}) {
+export default function HomeAside({ darkmode, handleClick, setPosts }) {
   const [selectState, setSelectState] = useState({
     Home: false,
     Search: false,
@@ -35,7 +35,6 @@ export default function HomeAside({darkmode, handleClick}) {
         setIsModalOpen(true);
       } else {
         setIsModalOpen(false);
-        
       }
     }
     setSelectState((prevState) => {
@@ -51,16 +50,16 @@ export default function HomeAside({darkmode, handleClick}) {
     <aside className="fixed bottom-0 xl:top-0 xl:left-0 h-20 w-full xl:w-96 xl:h-full border-t xl:border-r xl:border-t-0 flex bg-white dark:bg-black xl:flex-col order-2 xl:order-first">
       {darkmode ? (
         <img
-        src="https://www.pngkey.com/png/full/28-287308_instagram-logo-text-white.png"
-        className="ml-6 hidden xl:w-40 xl:block w-40 mt-6"
-        alt="logo"
-      />
+          src="https://www.pngkey.com/png/full/28-287308_instagram-logo-text-white.png"
+          className="ml-6 hidden xl:w-40 xl:block w-40 mt-6"
+          alt="logo"
+        />
       ) : (
         <img
-        src="https://1000marcas.net/wp-content/uploads/2019/11/Logo-Instagram.png"
-        className="ml-6 hidden xl:w-40 xl:block w-40 mt-6"
-        alt="logo"
-      />
+          src="https://1000marcas.net/wp-content/uploads/2019/11/Logo-Instagram.png"
+          className="ml-6 hidden xl:w-40 xl:block w-40 mt-6"
+          alt="logo"
+        />
       )}
       <nav className="flex flex-row xl:flex-col xl:w-full xl:h-full justify-center p-5 gap-3 flex-1">
         <Link to="/">
@@ -96,9 +95,7 @@ export default function HomeAside({darkmode, handleClick}) {
           handleSelect={handleSelect}
         />
         {selectState.Create && (
-          <CreateModal
-            setSelectState={setSelectState}
-          />
+          <CreateModal setSelectState={setSelectState} setPosts={setPosts} />
         )}
         <Link to="/profile">
           <NavItem
@@ -109,10 +106,7 @@ export default function HomeAside({darkmode, handleClick}) {
           ></NavItem>
         </Link>
         {isModalOpen && (
-          <MoreModal
-            setIsModalOpen={setIsModalOpen}
-            onClick = {handleClick}
-          />
+          <MoreModal setIsModalOpen={setIsModalOpen} onClick={handleClick} />
         )}
         <NavItem
           icon={CgDetailsMore}

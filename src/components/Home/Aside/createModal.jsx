@@ -1,44 +1,49 @@
-  import React, { useState } from "react";
-  import { auth } from "../../../firebase";
-  import { collection, addDoc } from "firebase/firestore";
-  import { storage } from "../../../firebase";
-  import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
-  import { db } from "../../../firebase";
-  import { MdOutlineAddPhotoAlternate } from "react-icons/md";
-  import { AiOutlineRollback } from "react-icons/ai";
+import React, { useState } from "react";
+import { auth } from "../../../firebase";
+import { collection, addDoc, getDoc } from "firebase/firestore";
+import { storage } from "../../../firebase";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { db } from "../../../firebase";
+import { MdOutlineAddPhotoAlternate } from "react-icons/md";
+import { AiOutlineRollback } from "react-icons/ai";
 
-  export default function CreateModal({ setSelectState }) {
-    const [image, setImage] = useState(undefined);
-    const [text, setText] = useState("");
+export default function CreateModal({ setSelectState, setPosts }) {
+  const [image, setImage] = useState(undefined);
+  const [text, setText] = useState("");
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        const imageRef = ref(storage, image.name);
-        await uploadBytes(imageRef, image);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const imageRef = ref(storage, image.name);
+      await uploadBytes(imageRef, image);
 
-        const imgUrl = await getDownloadURL(imageRef);
+      const imgUrl = await getDownloadURL(imageRef);
 
-        const user = auth.currentUser;
-        if (user) {
-          const docRef = await addDoc(collection(db, "posts"), {
-            userID: user.uid,
-            username: user.displayName,
-            img: imgUrl,
-            likes: [],
-            txt: text,
-          });
-        } else {
-          console.error("Error adding document: user not found");
-        }
-      } catch (e) {
-        console.error("Error adding document: ", e);
-      } finally {
-        setImage(undefined);
-        setText("");
-        setSelectState((prevState) => ({ ...prevState, Create: false }));
+      const user = auth.currentUser;
+      if (user) {
+        const docRef = await addDoc(collection(db, "posts"), {
+          userID: user.uid,
+          username: user.displayName,
+          img: imgUrl,
+          likes: [],
+          txt: text,
+        });
+        const docData = await getDoc(docRef);
+        setPosts((prevPosts) => [
+          ...prevPosts,
+          { id: docRef.id, ...docData.data() },
+        ]);
+      } else {
+        console.error("Error adding document: user not found");
       }
-    };
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    } finally {
+      setImage(undefined);
+      setText("");
+      setSelectState((prevState) => ({ ...prevState, Create: false }));
+    }
+  };
 
   return (
     <div className="w-screen h-screen inset-0 bg-black/60 flex items-center justify-center z-50 absolute transition duration-300">
@@ -94,7 +99,10 @@
                   <div className="w-full border-b flex justify-between dark:border-gray-900 py-2 text-center font-semibold">
                     <AiOutlineRollback
                       className="text-2xl cursor-pointer"
-                      onClick={() => {setImage(undefined); setText("")}}
+                      onClick={() => {
+                        setImage(undefined);
+                        setText("");
+                      }}
                     />
                     <span>Create new Post</span>
                     <span

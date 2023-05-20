@@ -16,6 +16,7 @@ export default function Home({ setCurrentUser, currentUser }) {
   const [comments, setComments] = useState([]);
   const [showComments, setShowComments] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     if (!auth.currentUser) navigate("/login");
@@ -32,6 +33,7 @@ export default function Home({ setCurrentUser, currentUser }) {
       <HomeAside
         darkmode={darkmode}
         handleClick={handleClick}
+        setPosts={setPosts}
       />
       <section className="xl:ml-80 flex-1 xl:h-full order-1 mb-20">
         <main className="container mx-auto flex p-8 justify-center">
@@ -47,6 +49,8 @@ export default function Home({ setCurrentUser, currentUser }) {
                   setComments={setComments}
                   setShowComments={setShowComments}
                   setCurrentPost={setCurrentPost}
+                  setPosts={setPosts}
+                  posts={posts}
                 />
               }
             />

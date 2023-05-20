@@ -19,8 +19,9 @@ export default function PostSection({
   setComments,
   setShowComments,
   setCurrentPost,
+  posts,
+  setPosts
 }) {
-  const [posts, setPosts] = useState([]);
   const [postComments, setPostComments] = useState(
     posts.map((post) => ({ [post.id]: "" }))
   );

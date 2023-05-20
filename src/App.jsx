@@ -8,22 +8,27 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
 
   return (
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/login"
-            exact
-            element={
-              <Login
-                setCurrentUser={setCurrentUser}
-                currentUser={currentUser}
-              />
-            }
-          />
-          <Route path="/*" element={<Home currentUser={currentUser} setCurrentUser={setCurrentUser} />} />
-          <Route path="/signup" element={<Signup setCurrentUser={setCurrentUser} />} />
-        </Routes>
-      </BrowserRouter>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/login"
+          exact
+          element={
+            <Login setCurrentUser={setCurrentUser} currentUser={currentUser} />
+          }
+        />
+        <Route
+          path="/*"
+          element={
+            <Home currentUser={currentUser} setCurrentUser={setCurrentUser} />
+          }
+        />
+        <Route
+          path="/signup"
+          element={<Signup setCurrentUser={setCurrentUser} />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
