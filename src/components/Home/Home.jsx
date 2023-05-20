@@ -30,7 +30,6 @@ export default function Home({ setCurrentUser, currentUser }) {
     <div className="flex flex-col xl:flex-row bg-white dark:bg-black">
       {loading && <Loading />}
       <HomeAside
-        setDarkmode={setDarkmode}
         darkmode={darkmode}
         handleClick={handleClick}
       />
@@ -68,6 +67,7 @@ export default function Home({ setCurrentUser, currentUser }) {
               setShowComments={setShowComments}
               post={currentPost}
               setPost={setCurrentPost}
+              setComments={setComments}
             />
           )}
         </main>

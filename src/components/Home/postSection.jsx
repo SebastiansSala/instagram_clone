@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { auth } from "../../firebase";
 import { FaRegComment } from "react-icons/fa";
 import {
@@ -31,6 +31,7 @@ export default function PostSection({
       const postRef = doc(db, "posts", postId);
       const commentRef = collection(postRef, "comments");
       const newCommentRef = await addDoc(commentRef, {
+        userID: auth.currentUser.uid,
         username: currentUsername,
         comment: postComments[postId],
         likes: [],
@@ -145,14 +146,18 @@ export default function PostSection({
                   className="w-[30rem] object-contain object-center"
                 ></img>
                 <div className="flex gap-5 mt-3 items-center">
-                  <AiOutlineHeart
-                    className={`text-2xl hover:cursor-pointer hover:text-gray-500 max-h ${
-                      post.likes.includes(auth.currentUser.uid)
-                        ? "text-red-600"
-                        : "text-black"
-                    }`}
+                  {post.likes.includes(auth.currentUser.uid) ? (
+                    <AiFillHeart
+                    className="text-2xl hover:cursor-pointer hover:text-gray-500 max-h text-red-600"
                     onClick={() => handleLikes(post.id)}
                   />
+                  ) : (
+                    <AiOutlineHeart
+                    className="text-2xl hover:cursor-pointer hover:text-gray-500 max-h text-black dark:text-white"
+                    onClick={() => handleLikes(post.id)}
+                  />
+
+                  )}
                   <FaRegComment
                     className="text-xl hover:cursor-pointer hover:text-gray-500 "
                     onClick={() => handleShowComments(post.id)}

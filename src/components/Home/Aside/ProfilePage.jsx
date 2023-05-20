@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import { auth } from "../../../firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 import ProfileTags from "./profileTags";
 import Saved from "./Saved";
 import Posts from "./Posts";
@@ -9,7 +6,6 @@ import Tagged from "./Tagged";
 import { Routes, Route } from "react-router-dom";
 
 export default function ProfilePage({ currentUser, setCurrentUser }) {
-  const navigate = useNavigate();
   const [selectState, setSelectState] = useState({
     posts: true,
     saved: false,

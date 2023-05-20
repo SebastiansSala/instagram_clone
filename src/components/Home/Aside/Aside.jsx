@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import MoreModal from "./MoreModal";
 import CreateModal from "./createModal";
 
-export default function HomeAside({setDarkmode, darkmode, handleClick}) {
+export default function HomeAside({darkmode, handleClick}) {
   const [selectState, setSelectState] = useState({
     Home: false,
     Search: false,
