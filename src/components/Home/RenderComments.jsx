@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import {
   doc,
   getDoc,
@@ -6,8 +8,6 @@ import {
   updateDoc,
   addDoc,
 } from "firebase/firestore";
-import React from "react";
-import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { db, auth } from "../../firebase";
 
 export default function RenderComments({
@@ -16,12 +16,11 @@ export default function RenderComments({
   post,
   setComments,
 }) {
-  const [change, setChange] = React.useState("");
+  const [change, setChange] = useState("");
   const currentUser = auth.currentUser.uid;
 
   const handlePost = async () => {
     if (change.length < 2) return;
-    console.log(change);
     try {
       const dbRef = doc(db, "posts", post.id);
       const collectionRef = collection(dbRef, "comments");
@@ -29,20 +28,13 @@ export default function RenderComments({
         userID: currentUser,
         username: auth.currentUser.displayName,
         comment: change,
-        likes: [],
+        likes: []
       });
       const docData = await getDoc(docRef);
-      const docsSnapshot = await getDocs(collectionRef);
-      const updatedComments = docsSnapshot.docs.map((comment) => {
-        if (comment.id === docData.id) {
-          return {
-            ...comment.data(),
-            likesCount: comment.data().likes.length,
-          };
-        }
-        return comment.data();
-      });
-      setComments(updatedComments);
+      setComments((prevComments) => [
+        ...prevComments,
+        { ...docData.data(), likesCount: docData.data().likes.length },
+      ]);
       setChange("");
     } catch (e) {
       console.error(e);
@@ -56,36 +48,57 @@ export default function RenderComments({
       const commentRef = collection(postRef, "comments");
       const commentDoc = await getDoc(doc(commentRef, commentId));
       const likesList = commentDoc.data().likes;
-      const likes = likesList.find((id) => id === currentUser);
+      const likes = likesList.includes(currentUser);
+
+      let newLikesList;
       if (likes) {
-        const filteredLikes = likesList.filter((id) => id !== currentUser);
-        await updateDoc(doc(commentRef, commentId), { likes: [...filteredLikes] });
+        newLikesList = likesList.filter((id) => id !== currentUser);
+        await updateDoc(doc(commentRef, commentId), { likes: newLikesList });
       } else {
+        newLikesList = { ...likesList, currentUser };
         await updateDoc(doc(commentRef, commentId), {
-          likes: [...likesList, currentUser],
+          likes: newLikesList,
         });
       }
-      const newCommentList = await getDocs(commentRef);
-      const newCommentsFiltered = newCommentList.docs.filter(
-        (comment) => comment.id === commentId
+
+      setComments((prevComments) =>
+        prevComments.map((comment) => {
+          if (comment.id === commentId) {
+            return {
+              ...comment,
+              likes: newLikesList,
+              likesCount: newLikesList.length,
+            };
+          }
+          return comment;
+        })
       );
-      const newLikesList = newCommentsFiltered[0].data().likes;
-      const updatedComments = comments.map((comment) => {
-        if (comment.id === commentId) {
-          return {
-            ...comment,
-            likes: newLikesList,
-            likesCount: newLikesList.length,
-          };
-        }
-        return comment;
-      });
-      setComments(updatedComments);
     } catch (e) {
       console.error(e);
     }
   };
-  
+
+  useEffect(() => {
+    const updateComments = async () => {
+      try {
+        const postRef = doc(db, "posts", post.id);
+        const commentRef = collection(postRef, "comments");
+        const newCommentList = await getDocs(commentRef);
+        const updatedComments = newCommentList.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+          likes: doc.data().likes || [],
+          likesCount: doc.data().likes.length,
+        }));
+        setComments(updatedComments);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    updateComments();
+  }, [comments]);
+
   return (
     <div className="w-screen fixed h-screen inset-0 bg-black/60 flex items-center justify-center z-50 transition duration-300">
       <div
@@ -147,7 +160,7 @@ export default function RenderComments({
             />
             <button
               className="text-blue-400 text-sm"
-              onClick={() => handlePost(post.id)}
+              onClick={() => handlePost()}
             >
               Post
             </button>

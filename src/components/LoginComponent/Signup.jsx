@@ -4,7 +4,7 @@ import Footer from "./Footer";
 import { auth, db } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, getDocs, addDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -128,7 +128,10 @@ export default function Signup() {
         </div>
         <div className="border max-w-xs mt-4 w-96 py-3 text-center rounded">
           <p className="text-sm ">
-            Have an account? <span className="text-blue-400">Log in</span>
+            Have an account?{" "}
+            <span className="text-blue-400">
+              <Link to="/login"> Log in</Link>
+            </span>
           </p>
         </div>
       </div>

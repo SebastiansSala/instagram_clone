@@ -20,7 +20,7 @@ export default function PostSection({
   setShowComments,
   setCurrentPost,
   posts,
-  setPosts
+  setPosts,
 }) {
   const [postComments, setPostComments] = useState(
     posts.map((post) => ({ [post.id]: "" }))
@@ -38,7 +38,12 @@ export default function PostSection({
         likes: [],
       });
       const updatedComments = await getDoc(newCommentRef);
-      setPostComments((prevPost) => ({ ...prevPost, [postId]: "", likesCount: updatedComments.data().likes.length}));
+      setPostComments((prevPost) => ({
+        ...prevPost,
+        [postId]: "",
+        likes: updatedComments.data().likes || [],
+        likesCount: updatedComments.data().likes.length,
+      }));
     } catch (e) {
       console.error(e);
     }
@@ -94,7 +99,7 @@ export default function PostSection({
         const comments = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-          likesCount: doc.data().likes.length
+          likesCount: doc.data().likes.length,
         }));
         setComments(comments);
       } catch (e) {
@@ -149,15 +154,14 @@ export default function PostSection({
                 <div className="flex gap-5 mt-3 items-center">
                   {post.likes.includes(auth.currentUser.uid) ? (
                     <AiFillHeart
-                    className="text-2xl hover:cursor-pointer hover:text-gray-500 max-h text-red-600"
-                    onClick={() => handleLikes(post.id)}
-                  />
+                      className="text-2xl hover:cursor-pointer hover:text-gray-500 max-h text-red-600"
+                      onClick={() => handleLikes(post.id)}
+                    />
                   ) : (
                     <AiOutlineHeart
-                    className="text-2xl hover:cursor-pointer hover:text-gray-500 max-h text-black dark:text-white"
-                    onClick={() => handleLikes(post.id)}
-                  />
-
+                      className="text-2xl hover:cursor-pointer hover:text-gray-500 max-h text-black dark:text-white"
+                      onClick={() => handleLikes(post.id)}
+                    />
                   )}
                   <FaRegComment
                     className="text-xl hover:cursor-pointer hover:text-gray-500 "
